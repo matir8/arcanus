@@ -1,0 +1,10 @@
+<div class="row">
+  <h1 class="center">New Message</h1>
+
+  <%= form_for @message, url: {action: "create"}, html:{class: "col s6 offset-s3 center"} do |f|%>
+    <%= f.text_area :content, :class => "materialize-textarea"%>
+    <%= f.submit "Add message", :class => "btn" %>
+  <% end %>
+  <%# <%= render 'form', :class => 'col s6 offset-s3', message: @message %>
+
+</div>
