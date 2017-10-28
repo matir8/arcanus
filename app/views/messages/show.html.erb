@@ -2,8 +2,26 @@
   <p id="notice"><%= notice %></p>
 
   <p>
-      <%= @message.content %>
+    <% if @message %>
+    <div class="row">
+      <div class="col s12 m10 offset-m1">
+        <div class="card light-blue darken-2">
+          <div class="card-content white-text">
+            <span class="card-title">Message content:</span>
+              <textarea disabled class="materialize-textarea white black-text center"><%= @message.content %></textarea>
+          </div>
+          <div class="card-content">
+            <div id="card-alert" class="card orange">
+              <div class="card-content white-text">
+                <p><i class="material-icons">warning</i> Message has been deleted. If you want to save it, please copy it before closing the page.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% else %>
+      <h1 class="center">Message not found</h1>
+    <% end %>
   </p>
-
-  <%= link_to 'Edit', edit_message_path(@message) %>
 </div>

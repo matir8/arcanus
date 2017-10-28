@@ -1,24 +1,23 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:show, :edit, :update, :destroy]
+  before_action :set_message, only: %i[show edit update destroy]
 
   # GET /messages
   # GET /messages.json
   def index
-    @messages = Message.all
+    @message = Message.new
   end
 
   # GET /messages/1
   # GET /messages/1.json
   def show
-  end
-
-  # GET /messages/new
-  def new
-    @message = Message.new
-  end
-
-  # GET /messages/1/edit
-  def edit
+    if @message
+      @message.destroy
+    else
+      respond_to do |format|
+        format.html { 'Message not found.' }
+        format.json { head :no_content }
+      end
+    end
   end
 
   # POST /messages
@@ -28,24 +27,10 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        format.html { redirect_to @message, notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: @message }
+        format.html { render :message_info }
+        format.json { render :show, status: :created, location: @message }        
       else
         format.html { render :new }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /messages/1
-  # PATCH/PUT /messages/1.json
-  def update
-    respond_to do |format|
-      if @message.update(message_params)
-        format.html { redirect_to @message, notice: 'Message was successfully updated.' }
-        format.json { render :show, status: :ok, location: @message }
-      else
-        format.html { render :edit }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end
     end
@@ -62,13 +47,14 @@ class MessagesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_message
-      @message = Message.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def message_params
-      params.require(:message).permit(:content)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = Message.find_by(id: params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def message_params
+    params.require(:message).permit(:content)
+  end
 end
