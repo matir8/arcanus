@@ -1,0 +1,12 @@
+REST API
+/notes/API -> POST JSON
+
+JSON with body
+{
+  "message": "..."
+}
+
+Response with body
+{
+  "url": "..."
+}

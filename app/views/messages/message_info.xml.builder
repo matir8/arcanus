@@ -1,0 +1,1 @@
+xml.url "#{@host}/messages/#{@message.id}"

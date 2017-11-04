@@ -1,0 +1,12 @@
+API with XML
+
+request:
+
+<message>
+  content...
+</message>
+
+response: 
+<url>
+  ...
+</url>
