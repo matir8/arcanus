@@ -1,1 +1,1 @@
-json.url url_for("#{@host}/notes/api/#{@message.id}")
+json.url "#{@host}/messages/#{@message.id}"

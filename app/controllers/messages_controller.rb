@@ -12,7 +12,6 @@ class MessagesController < ApplicationController
   # GET /messages/1.json
   def show
     if @message
-      print @message.message
       respond_to :json, :xml, :html
       @message.destroy
     else
@@ -27,18 +26,17 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.json
   def create
-    if message_params.to_h[:message].is_a?(Hash)
-      msg = message_params.to_h[:message]
-      @message = Message.new(msg)
-    else
-      @message = Message.new(message_params)
-    end
+    @message = Message.new(message_params)
 
     respond_to do |format|
       if @message.save
-        format.xml { render :message_info }
-        format.json { render :message_info }
-        format.html { render :message_info }
+        if req_xml?
+          format.xml { render :message_info }
+        elsif req_json?
+          format.json { render :message_info }
+        else
+          format.html { render :message_info }
+        end
       else
         format.html { render :new }
         format.json { render json: @message.errors, status: :unprocessable_entity }
@@ -58,6 +56,14 @@ class MessagesController < ApplicationController
 
   private
 
+  def req_xml?
+    request.content_type.include? 'xml'
+  end
+
+  def req_json?
+    request.content_type.include? 'json'
+  end
+
   # Use callbacks to share common setup or constraints between actions.
   def set_message
     @message = Message.find_by(id: params[:id])
@@ -65,7 +71,15 @@ class MessagesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def message_params
-    params.permit(:message, :message => {})
+    if req_xml?
+      { 'message' => Nokogiri::XML(request.body).content }
+    elsif req_json?
+      params.permit(:message)
+    else
+      params.permit(message: {}).to_h[:message]
+    end
+    # params.permit(:message, :message => {})
+    # print params
   end
 
   def sitename
