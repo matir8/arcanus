@@ -83,6 +83,10 @@ class MessagesController < ApplicationController
   end
 
   def sitename
-    @host = "#{request.host}:#{request.port}"
+    if Rails.env.production?
+      @host = request.host
+    else 
+      @host = "#{request.host}:#{request.port}"
+    end
   end
 end
